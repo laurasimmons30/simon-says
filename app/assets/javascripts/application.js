@@ -29,6 +29,9 @@ function startGameCountDown() {
   setTimeout(function() { notifications.toggle() }, 5000)
 }
 
+
+
 $( document ).ready(function() {
-  startGameCountDown();
+  // startGameCountDown();
+  $('#play_button').bind('click', function() {startGameCountDown()} )
 });
