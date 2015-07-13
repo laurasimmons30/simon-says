@@ -13,9 +13,8 @@
  *= require_tree .
  *= require_self
  */
-
-.border {
-  border: red solid 1px;
+body {
+  background-color: black;
 }
 
 .rounded {
@@ -24,17 +23,17 @@
   -webkit-border-radius: 30px 30px 30px 30px;
 }
 
-#notifications {
+#gameBoard {
   position: relative;
   width: 700px;
-  height: 500px;
+  height: 470px;
   margin: auto;
   margin-top: 30px;
-  background-color: #a8e3b8;
+  background-color: #a8a4a4;
   display: none;
 }
 
-.notification-white {
+.gameBoard-white {
   height: 90%;
   width: 90%;
   margin: auto;
@@ -47,11 +46,11 @@
   z-index: 1;
 }
 
-#notification-text {
+#gameBoard-text {
   height: 75%;
   width: 75%;
   margin: auto;
-  background-color: #a8e3b8;
+  background-color: #a8a4a4;
   z-index: 10;
 
   font-size: 21em;
@@ -128,13 +127,17 @@
   top: -350px;
   min-width: 500px;
   height: 70px;
-  color: white;
+  color: #d1caca;
+  text-shadow: 0px 1.5px #919191;
   text-align: center;
   font-size: 3.5em;
+  width: 400px;
+  margin: 0px auto
 }
 
 #play_button {
   margin: auto;
+  margin-top: 55px;
   text-align: center;
   font-size: 3em;
   width: 240px;

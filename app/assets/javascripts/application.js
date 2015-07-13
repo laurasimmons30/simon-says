@@ -20,6 +20,12 @@ Array.prototype.randomElement = function() {
   return this[Math.floor(Math.random() * this.length)]
 }
 
+// turn off scrolling on the page
+$('html, body').css({
+    'overflow': 'hidden',
+    'height': '100%'
+});
+
 var directionKey = new Object();
 directionKey['38'] = 'up';
 directionKey['40'] = 'down';
@@ -31,6 +37,12 @@ displayKey['up'] = '▲';
 displayKey['down'] = '▼';
 displayKey['left'] = '◄';
 displayKey['right'] = '►';
+
+var colorKey = new Object();
+colorKey['▲'] = '#4bd813';
+colorKey['▼'] = '#023ded';
+colorKey['◄'] = '#f7f72c';
+colorKey['►'] = 'red';
 
 var computerOptions = ['down', 'up', 'left', 'right'];
 var computerSequence = createSequence(2);
@@ -49,16 +61,19 @@ function createSequence(num) {
 }
 
 function startRoundCountDown() {
-  var notifications = $('#notifications')
-  var textDiv = $('#notification-text');
+  var gameBoard = $('#gameBoard');
+  var textDiv = $('#gameBoard-text');
+  var startMenu = $('#start_menu');
+  textDiv.css('font-size', '21em');
 
   //make visible  
-  setTimeout(function() { notifications.show();
+  setTimeout(function() { gameBoard.show();
+                          $('.start_menu_text').hide();
+                          startMenu.hide();
                           textDiv.text(3); }, 1000);
   setTimeout(function() { textDiv.text(2); }, 2000);
   setTimeout(function() { textDiv.text(1); }, 3000);
 
-  // hide
   setTimeout(function() { textDiv.text('');
                           startRound(); }, 4000);
 }
@@ -69,26 +84,28 @@ function startRound() {
 }
 
 function displaySequence(array) {
-  var textDiv = $('#notification-text');
+  var textDiv = $('#gameBoard-text');
+  textDiv.css('font-size', '21em');
 
   for (var i = 0; i < array.length; i++) {
     var itemForTheDom = displayKey[array[i]];
     var milliseconds = ((i+1) * 1000);
 
     (function(itemForTheDom,milliseconds) {
-      setTimeout(function() { textDiv.text(''); }, milliseconds - 300);
+      setTimeout(function() { textDiv.css('color', colorKey[itemForTheDom]);
+                              textDiv.text(''); }, milliseconds - 300);
       setTimeout(function() { textDiv.text(itemForTheDom); }, milliseconds);
     })(itemForTheDom, milliseconds);
   }
   
   (function(seconds) {
-    setTimeout(function() { userAttempt() }, (seconds));
+    setTimeout(function() { textDiv.css('color', 'white'); userAttempt() }, (seconds));
   })( (array.length+2) *1000);
 }
 
 function userAttempt() {
-  $('#notification-text').text('Go');
-
+  $('#gameBoard-text').css("font-size", "9em");
+  $('#gameBoard-text').text('Your Turn');
   userCountdown(true);
   userTurn = true;
 }
@@ -111,16 +128,25 @@ function checkInput(key) {
 
 function winRound() {
   console.log('YOU WIN')
-  userCountdown(false);
   round ++;
+  clearForNextRound();
+  startRoundCountDown();
+}
+function clearForNextRound() {
+  userCountdown(false);
   userInput = [];
   userTurn = false;
-  startRoundCountDown();
+  $('#gameBoard-text').text('');
 }
 
 function loseGame() {
-  console.log(round);
-  alert('you lose');
+  clearForNextRound();
+  computerSequence = createSequence(2);
+  $('.start_menu_text').text('');
+  $('#gameBoard').hide();
+  $('.start_menu_text').text('You completed ' + round + ' rounds! Try again?');
+  $('#start_menu').show();
+  $('.start_menu_text').show();
 }
 
 var endgameCountdown;
@@ -132,7 +158,6 @@ function userCountdown(boolean) {
     if (userSeconds > 0) {
       endgameCountdown = setTimeout(function() { userCountdown(true) }, 1000);
     } else {
-      console.log('working?')
       userSeconds = 5;
       loseGame();
     }
@@ -143,11 +168,10 @@ function userCountdown(boolean) {
 }
 
 $( document ).ready(function() {
-  $('#play_button').bind('click', function() { startRoundCountDown() } );
+  $('#play_button').bind('click', function() { round = 1; startRoundCountDown() } );
   $(document).bind('keyup', function(key) { 
     if (userTurn == true) {
       checkInput(key);
     }
   });
-
 });
